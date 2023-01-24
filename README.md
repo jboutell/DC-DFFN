@@ -6,7 +6,7 @@ DC-DFFN: Densely Connected Deep Feature Fusion Network with Sign Agnostic Learni
 
 cd ./code  
 
-python evaluate/eval.py --expname shapenet --parallel --exps_folder_name trained_models --timestamp 2022_08_19_16_19_30 --checkpoints 1500 --confs ./confs/shapenet_vae.conf --split ./confs/splits/shapenet/shapenet_sofa_test_files.conf --resolution 100
+python evaluate/eval.py --expname shapenet --parallel --exps_folder_name trained_models --timestamp 2022_08_19_16_19_30 --checkpoint 1500 --conf ./confs/shapenet_vae.conf --split ./confs/splits/shapenet/shapenet_sofa_test_files.conf --resolution 100
 
 
 
