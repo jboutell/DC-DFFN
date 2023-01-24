@@ -2,7 +2,7 @@
 DC-DFFN: Densely Connected Deep Feature Fusion Network with Sign Agnostic Learning for Implicit Shape Representation
 
 # Reconstruction Preview
-< video src='https://github.com/basher8488881/DC-DFFN/blob/master/shapenet_sofa.mp4', width =180 \>
+![plot](https://github.com/basher8488881/DC-DFFN/blob/master/sofa1.png)
 
 
 # Environment
