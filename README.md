@@ -2,7 +2,7 @@
 DC-DFFN: Densely Connected Deep Feature Fusion Network with Sign Agnostic Learning for Implicit Shape Representation
 
 # Reconstruction Preview
-<video src='https://www.youtube.com/watch?v=nvPOUdz5PL4', width= 180/>
+<video src='shapenet_sofa', width= 180/>
 
 # Environment
 The code is implemented and  tested on Ubuntu 20.4 linux environment. 
