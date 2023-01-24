@@ -1,6 +1,8 @@
 # DC-DFFN
 DC-DFFN: Densely Connected Deep Feature Fusion Network with Sign Agnostic Learning for Implicit Shape Representation
 
+# Environment
+The code is implemented on Ubuntu 20.4 linux environment. 
 
 # Generation 
 
