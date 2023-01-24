@@ -1,14 +1,14 @@
 # DC-DFFN
 DC-DFFN: Densely Connected Deep Feature Fusion Network with Sign Agnostic Learning for Implicit Shape Representation
 
-# Reconstruction Preview
+## Reconstruction Preview
 ![plot](https://github.com/basher8488881/DC-DFFN/blob/master/sofa1.png)
 
 
-# Environment
+## Environment
 The code is implemented and  tested on Ubuntu 20.4 linux environment. 
 
-# Generation 
+## Generation 
 
 cd ./code  
 
@@ -16,5 +16,5 @@ python evaluate/eval.py --expname shapenet --parallel --exps_folder_name trained
 
 
 
-# Acknowledgement 
+## Acknowledgement 
 This code is based on SALD (https://github.com/matanatz/SALD), thanks for this wonderful work. 
