@@ -17,7 +17,7 @@ python evaluate/eval.py --expname shapenet --parallel --exps_folder_name trained
 ## Training 
 cd ./code 
 
-python training/exp_runner.py --parallel --batch_size 16 --nepoch 1500
+python training/exp_runner.py --parallel 
 
 ## Acknowledgement 
 This code is based on SALD (https://github.com/matanatz/SALD), thanks for this wonderful work. 
