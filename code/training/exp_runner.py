@@ -12,7 +12,7 @@ if __name__ == "__main__":
     #torch.set_num_threads(1)
     print(torch.__version__)
     parser = argparse.ArgumentParser()
-    parser.add_argument("--batch_size", type=int, default=32, help="Input batch size.")
+    parser.add_argument("--batch_size", type=int, default=1, help="Input batch size.")
     
     parser.add_argument(
         "--nepoch", type=int, default=500, help="Number of epochs to train."
