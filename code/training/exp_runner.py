@@ -17,7 +17,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--nepoch", type=int, default=500, help="Number of epochs to train."
     )
-    parser.add_argument("--conf", type=str, default="./confs/dfaust_vae.conf")
+    parser.add_argument("--conf", type=str, default="./confs/shapenet_vae.conf")
     parser.add_argument("--expname", type=str, default="")
     parser.add_argument("--expsfolder", type=str, default="exps")
     parser.add_argument(
