@@ -1,6 +1,5 @@
 import argparse
 import sys
-# python training/exp_runner.py --batch_size 2 --expname _uniform --workers 0 --nepoch 100000 --gpu auto --conf ./confs/dfaust_fix_latent_small_local.conf
 sys.path.append("../code")
 
 import utils.general as utils
