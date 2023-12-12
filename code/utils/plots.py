@@ -166,7 +166,7 @@ def get_surface_trace(points, decoder, latent, resolution, mc_value, is_uniform,
         z  = z.astype(np.float64)
 
         if is_3d :
-            verts, faces, normals, values = measure.marching_cubes_lewiner(
+            verts, faces, normals, values = measure.marching_cubes(
                 volume=z.reshape(grid['xyz'][1].shape[0], grid['xyz'][0].shape[0],
                                 grid['xyz'][2].shape[0]).transpose([1, 0, 2]),
                 level=mc_value,
@@ -409,3 +409,4 @@ def get_grid_uniform(points,resolution,grid_boundary,is_3d):
             "shortest_axis_length": shortest_axis_length,
             "xyz": [x, y, z],
             "shortest_axis_index": 0}
+

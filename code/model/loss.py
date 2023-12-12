@@ -15,6 +15,7 @@ class SALDLoss(GenLoss):
         super().__init__()
         self.l1_loss = torch.nn.L1Loss()
         self.l2_loss = torch.nn.MSELoss()
+        self.squeeze_gt = kwargs['squeeze_gt']
         self.recon_loss_weight = kwargs['recon_loss_weight']
         self.grad_loss_weight = kwargs['grad_loss_weight']
         self.z_weight = kwargs['z_weight']
@@ -36,7 +37,11 @@ class SALDLoss(GenLoss):
 
     def forward(self, network_outputs,normals_gt,normals_nonmnfld_gt,pnts_mnfld, gt_nonmnfld,epoch):
         debug = {}
-        recon_loss = self.l1_loss(network_outputs['non_mnfld_pred'].abs().squeeze(),gt_nonmnfld)
+        if squeeze_gt==True:
+            recon_loss = self.l1_loss(network_outputs['non_mnfld_pred'].abs().squeeze(),gt_nonmnfld.squeeze())
+        else
+            recon_loss = self.l1_loss(network_outputs['non_mnfld_pred'].abs().squeeze(),gt_nonmnfld)
+        
         debug['recon_loss'] = recon_loss
 
         

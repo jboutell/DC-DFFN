@@ -150,7 +150,7 @@ def evaluate_with_load(gpu, conf, exps_folder_name, override, timestamp, checkpo
     )
 
 
-def evaluate(network,exps_folder_name, experiment_name, timestamp, epoch, resolution, conf, index, recon_only,lat_vecs,plot_cmpr=False,with_gt=False, with_opt=False):
+def evaluate(network,exps_folder_name, experiment_name, timestamp, epoch, resolution, conf, index, recon_only,lat_vecs,plot_cmpr=False,with_gt=False, with_opt=False, recon_chamfer=False):
 
     if type(network) == torch.nn.parallel.DataParallel:
         network = network.module
@@ -158,24 +158,31 @@ def evaluate(network,exps_folder_name, experiment_name, timestamp, epoch, resolu
     
     chamfer_results = dict(files=[],reg_to_gen_chamfer=[],gen_to_reg_chamfer=[],scan_to_gen_chamfer=[],gen_to_scan_chamfer=[])
 
-    
-    split_filename = './confs/splits/{0}'.format(conf.get_string('train.test_split' ))
-    with open(split_filename, "r") as f:
-        split = json.load(f)
-    
-    ds = utils.get_class(conf.get_string('train.dataset.class'))(split=split,with_gt=with_gt,with_scans=True,scans_file_type='obj',
+    if (conf.get_string('train.test_split') == 'none'):
+        ds = utils.get_class(conf.get_string('train.dataset.class'))(split=None, **conf.get_config('train.dataset.properties'))
+        if recon_chamfer:
+            recon_raw_data_path = conf.get_config('train.dataset.properties')['dataset_path']
+    else:
+        split_filename = './confs/splits/{0}'.format(conf.get_string('train.test_split' ))
+        with open(split_filename, "r") as f:
+            split = json.load(f)
+        ds = utils.get_class(conf.get_string('train.dataset.class'))(split=split,with_gt=with_gt,with_scans=True,scans_file_type='obj',
                                                                 **conf.get_config('train.dataset.properties'))
     total_files = len(ds)
     logging.info ("total files : {0}".format(total_files))
     prop = conf.get_config('train.dataset.properties')
     prop['number_of_points'] = int(np.sqrt(30000))
-    ds_eval_scan = utils.get_class(conf.get_string('train.dataset.class'))(split=split,with_gt=True,
-                                                                **prop)
-    
-    utils.mkdir_ifnotexists(os.path.join(conf.get_string('train.base_path'), exps_folder_name, experiment_name, timestamp, 'evaluation'))
-    utils.mkdir_ifnotexists(os.path.join(conf.get_string('train.base_path'), exps_folder_name, experiment_name, timestamp, 'evaluation', split_filename.split('/')[-1].split('.json')[0]))
-    path = os.path.join(conf.get_string('train.base_path'), exps_folder_name, experiment_name, timestamp, 'evaluation', split_filename.split('/')[-1].split('.json')[0], str(epoch))
 
+    if with_gt:
+        ds_eval_scan = utils.get_class(conf.get_string('train.dataset.class'))(split=split,with_gt=True, **prop)
+
+    utils.mkdir_ifnotexists(os.path.join(conf.get_string('train.base_path'), exps_folder_name, experiment_name, timestamp, 'evaluation'))
+
+    if with_gt:
+        utils.mkdir_ifnotexists(os.path.join(conf.get_string('train.base_path'), exps_folder_name, experiment_name, timestamp, 'evaluation', split_filename.split('/')[-1].split('.json')[0]))
+        path = os.path.join(conf.get_string('train.base_path'), exps_folder_name, experiment_name, timestamp, 'evaluation', split_filename.split('/')[-1].split('.json')[0], str(epoch))
+    else:
+        path = os.path.join(conf.get_string('train.base_path'), exps_folder_name, experiment_name, timestamp, 'evaluation', str(epoch))
     utils.mkdir_ifnotexists(path)
 
     counter = 0
@@ -184,7 +191,8 @@ def evaluate(network,exps_folder_name, experiment_name, timestamp, epoch, resolu
                                                   shuffle=False,
                                                   num_workers=0, drop_last=False, pin_memory=True)
 
-    names = ['_'.join([ds.npyfiles_dist[i].split('/')[-3:][0],ds.npyfiles_dist[i].split('/')[-3:][2]]).split('_dist_triangle.npy')[0] for i in range(len(ds.npyfiles_dist))]
+    if not (conf.get_string('train.test_split') == 'none'):
+        names = ['_'.join([ds.npyfiles_dist[i].split('/')[-3:][0],ds.npyfiles_dist[i].split('/')[-3:][2]]).split('_dist_triangle.npy')[0] for i in range(len(ds.npyfiles_dist))]
     
     i = 1
     # index = index + 1
@@ -377,7 +385,8 @@ def evaluate(network,exps_folder_name, experiment_name, timestamp, epoch, resolu
         i = i + 1
         logging.info (i)
     if (index == -1):
-        pd.DataFrame(chamfer_results).to_csv(os.path.join(path,"eval_results.csv"))
+        if with_gt:
+            pd.DataFrame(chamfer_results).to_csv(os.path.join(path,"eval_results.csv"))
 
 
 if __name__ == '__main__':
@@ -425,6 +434,7 @@ if __name__ == '__main__':
                        timestamp=args.timestamp,
                        checkpoint=args.checkpoint,
                        resolution=args.resolution,
+                       recon_only=args.recon_only,
                        override=args.override,
                        with_opt=args.with_opt
                        )

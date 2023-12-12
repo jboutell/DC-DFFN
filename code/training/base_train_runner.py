@@ -140,7 +140,7 @@ class BaseTrainRunner():
         # Backup code
         self.code_path = os.path.join(self.expdir, self.timestamp, 'code')
         utils.mkdir_ifnotexists(self.code_path)
-        for folder in ['training','preprocess','evaluate','utils','model','datasets','confs']:
+        for folder in ['training','evaluate','utils','model','datasets','confs']:
             utils.mkdir_ifnotexists(os.path.join(self.code_path, folder))
             os.system("""cp -r ./{0}/* "{1}" """.format(folder,os.path.join(self.code_path, folder)))
 
@@ -154,8 +154,8 @@ class BaseTrainRunner():
         self.debug_log_conf_path = os.path.join(self.log_dir, 'debug_conf.csv')
 
         if (self.conf.get_string('train.data_split') == 'none'):
-            self.ds = utils.get_class(self.conf.get_string('train.dataset'))(split=None,
-                                                                            **self.conf.get_config('network.properties'))
+            self.ds = utils.get_class(self.conf.get_string('train.dataset.class'))(split=None,
+                                                                            **self.conf.get_config('train.dataset.properties'))
             #dataset_path=self.conf.get_string('train.dataset_path'), dist_file_name=None,is_l0=self.conf.get_bool('train.is_l0'))
         else:
             train_split_file = './confs/splits/{0}'.format(self.conf.get_string('train.data_split'))
@@ -168,10 +168,11 @@ class BaseTrainRunner():
                                                                             #  dist_file_name=self.conf.get_string('train.dist_file_name'),
                                                                             #  number_of_points=self.conf.get_int('train.number_of_points'))
         logging.info('after creating data set')
-        self.dataloader = MultiEpochsDataLoader(self.ds,
+        self.dataloader = torch.utils.data.DataLoader(self.ds,
                                                       batch_size=self.batch_size,
                                                       shuffle=True,
                                                       num_workers=kwargs['workers'],drop_last=True,pin_memory=True)
+
         self.eval_dataloader = torch.utils.data.DataLoader(self.ds,
                                                       batch_size=1,
                                                       shuffle=True,

@@ -17,6 +17,7 @@ import utils.plots as plt
 class TrainRunner(BaseTrainRunner):
     
     def run(self):
+        have_scale = False
         win = None
         win_surface = None
         timing_log = []
@@ -36,7 +37,10 @@ class TrainRunner(BaseTrainRunner):
                 logging.debug("in plot")
                 self.network.eval()
                 for i in range(min(1, self.ds_len)):
-                    pnts, normals, sample, idx = next(iter(self.eval_dataloader))
+                    if have_scale==True:
+                        pnts, normals, sample, scale_param, idx = next(iter(self.eval_dataloader))
+                    else:
+                        pnts, normals, sample, idx = next(iter(self.eval_dataloader))
                     pnts = pnts.cuda()
                     normals = normals.cuda()
                     idx = idx.cuda()
@@ -75,7 +79,11 @@ class TrainRunner(BaseTrainRunner):
             logging.debug('before data loop {0}'.format(time.time()-start_epoch))
             before_data_loop = time.time()
             data_index = 0
-            for pnts_mnfld,normals_mnfld,sample_nonmnfld,indices in self.dataloader:
+            for load_item in self.dataloader:
+                if have_scale==True:
+                    pnts_mnfld,normals_mnfld,sample_nonmnfld,scale_param,indices = load_item
+                else:
+                    pnts_mnfld,normals_mnfld,sample_nonmnfld,indices = load_item
                 logging.debug('in loop data {0}'.format(time.time()-before_data_loop))
                 start = time.time()
                 pnts_mnfld = pnts_mnfld.cuda()
