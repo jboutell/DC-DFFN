@@ -145,7 +145,7 @@ def evaluate_with_load(gpu, conf, exps_folder_name, override, timestamp, checkpo
         recon_only=recon_only,
         lat_vecs=lat_vecs,
         plot_cmpr=plot_cmpr,
-        with_gt=True,
+        with_gt=False,
         with_opt=with_opt
     )
 
@@ -173,8 +173,7 @@ def evaluate(network,exps_folder_name, experiment_name, timestamp, epoch, resolu
     prop = conf.get_config('train.dataset.properties')
     prop['number_of_points'] = int(np.sqrt(30000))
 
-    if with_gt:
-        ds_eval_scan = utils.get_class(conf.get_string('train.dataset.class'))(split=split,with_gt=True, **prop)
+    ds_eval_scan = utils.get_class(conf.get_string('train.dataset.class'))(split=split,with_gt=True, **prop)
 
     utils.mkdir_ifnotexists(os.path.join(conf.get_string('train.base_path'), exps_folder_name, experiment_name, timestamp, 'evaluation'))
 
