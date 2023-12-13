@@ -17,7 +17,7 @@ import utils.plots as plt
 class TrainRunner(BaseTrainRunner):
     
     def run(self):
-        have_scale = False
+        have_scale = True
         win = None
         win_surface = None
         timing_log = []

@@ -37,9 +37,9 @@ class SALDLoss(GenLoss):
 
     def forward(self, network_outputs,normals_gt,normals_nonmnfld_gt,pnts_mnfld, gt_nonmnfld,epoch):
         debug = {}
-        if squeeze_gt==True:
+        if self.squeeze_gt==True:
             recon_loss = self.l1_loss(network_outputs['non_mnfld_pred'].abs().squeeze(),gt_nonmnfld.squeeze())
-        else
+        else:
             recon_loss = self.l1_loss(network_outputs['non_mnfld_pred'].abs().squeeze(),gt_nonmnfld)
         
         debug['recon_loss'] = recon_loss
